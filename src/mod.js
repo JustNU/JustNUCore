@@ -337,4 +337,4 @@ class JustNUCore
     }
 }
 
-module.exports = JustNUCore;
+module.exports = {JustNUCore: new JustNUCore()}
