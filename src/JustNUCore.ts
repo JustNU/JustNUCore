@@ -137,15 +137,13 @@ export class JustNUCore {
 		});
 	}
 
-	public addItemRetexture(itemId, db, config, itemConfig, itemData): void
+	public addItemRetexture(modDb, itemId, baseItemID, bundlePath, copyAssort, addToBots): void
 	{
 		// const
 		const database = this.databaseServer.getTables();
 		const jsonUtil = this.jsonUtil;
 		const VFS = this.VFS;
 		const dbItems = database.templates.items;
-		const bundlePath = itemData[itemId].BundlePath;
-		const baseItemID = itemData[itemId].BaseItemID;
 		
 		// copy item from DB, change it's values and add it to database
 		const newItem = jsonUtil.clone(dbItems[baseItemID]);
@@ -167,11 +165,11 @@ export class JustNUCore {
 		for (const localeID in database.locales.global)
 		{
 			// en placeholder
-			database.locales.global[localeID].templates[itemId] = jsonUtil.deserialize(VFS.readFile(`${db}locales/en.json`))[itemId];
+			database.locales.global[localeID].templates[itemId] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/en.json`))[itemId];
 			
 			// actual locale
-			if (VFS.exists(`${db}locales/${localeID}.json`)) {
-				database.locales.global[localeID].templates[itemId] = jsonUtil.deserialize(VFS.readFile(`${db}locales/${localeID}.json`))[itemId];
+			if (VFS.exists(`${modDb}locales/${localeID}.json`)) {
+				database.locales.global[localeID].templates[itemId] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/${localeID}.json`))[itemId];
 			}
 		}
 		
@@ -179,12 +177,12 @@ export class JustNUCore {
 		this.updateFilters(itemId, baseItemID);
 		
 		// trader offers
-		if (config.EnableTradeOffers) {
+		if (copyAssort) {
 			this.copyTradeOffers(itemId, baseItemID);
 		}
 		
 		// bot changes
-		if (config.AddToBots) {
+		if (addToBots) {
 			this.copyBotItemWeighting(itemId, baseItemID);
 		}
 	}
