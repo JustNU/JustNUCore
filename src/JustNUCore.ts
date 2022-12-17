@@ -8,6 +8,7 @@ export class JustNUCore {
 		@inject("DatabaseServer") protected databaseServer: DatabaseServer,
 		@inject("JsonUtil") protected jsonUtil: JsonUtil,
 		@inject("VFS") protected VFS: VFS
+		@inject("WinstonLogger") protected logger: WinstonLogger
 	)
 	{}
 	
@@ -179,7 +180,12 @@ export class JustNUCore {
 		
 		// trader offers
 		if (config.EnableTradeOffers) {
-			this.copyTradeOffers(itemId, baseItemID)
+			this.copyTradeOffers(itemId, baseItemID);
+		}
+		
+		// bot changes
+		if (config.AddToBots) {
+			this.copyBotItemWeighting(itemId, baseItemID);
 		}
 	}
 	
@@ -243,6 +249,41 @@ export class JustNUCore {
 				}
 			}
 		}
+	}
+	
+	public copyBotItemWeighting(itemId, copyItemID): void
+	{
+		// const
+		const database = this.databaseServer.getTables();
+		const jsonUtil = this.jsonUtil;
+		
+		for (const bot in database.bots.types) {
+			
+			// add to equipment slots
+			for (const slot in database.bots.types[bot].inventory.equipment) {
+				if (database.bots.types[bot].inventory.equipment[slot][copyItemID]) {
+					database.bots.types[bot].inventory.equipment[slot][itemId] = jsonUtil.clone(database.bots.types[bot].inventory.equipment[slot][copyItemID]);
+				}
+			}
+			
+			// add to loot
+			for (const lootSlot in database.bots.types[bot].inventory.items) {
+				if (database.bots.types[bot].inventory.items[lootSlot].includes(copyItemID)) {
+					database.bots.types[bot].inventory.items[lootSlot].push(itemId);
+				}
+			}
+			
+			// add to mods
+			for (const modItem in database.bots.types[bot].inventory.mods) {
+				for (const modSlot in database.bots.types[bot].inventory.mods[modItem]) {
+					if (database.bots.types[bot].inventory.mods[modItem][modSlot].includes(copyItemID)) {
+						database.bots.types[bot].inventory.mods[modItem][modSlot].push(itemId)
+					}
+				}
+			}
+		}
+		
+		
 	}
 	/*
 	
