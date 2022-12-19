@@ -273,15 +273,19 @@ export class JustNUCore {
 			
 			// add to mods
 			for (const modItem in database.bots.types[bot].inventory.mods) {
+				// push to inv.mods.slot if its an attachment
 				for (const modSlot in database.bots.types[bot].inventory.mods[modItem]) {
 					if (database.bots.types[bot].inventory.mods[modItem][modSlot].includes(copyItemID)) {
-						database.bots.types[bot].inventory.mods[modItem][modSlot].push(itemId)
+						database.bots.types[bot].inventory.mods[modItem][modSlot].push(itemId);
 					}
+				}
+				
+				// add to inv.mods if it can have mods
+				if (database.bots.types[bot].inventory.mods[copyItemID]) {
+					database.bots.types[bot].inventory.mods[itemId] = jsonUtil.clone(database.bots.types[bot].inventory.mods[copyItemID]);
 				}
 			}
 		}
-		
-		
 	}
 	/*
 	
