@@ -49,11 +49,11 @@ export class JustNUCore {
 		for (const localeID in database.locales.global)
 		{
 			// en placeholder
-			database.locales.global[localeID].templates[`${outfitID}Suite`] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/en.json`))[outfitID];
+			database.locales.global[localeID][`${newSuite._id} Name`] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/en.json`))[outfitID].Name
 			
 			// actual locale
 			if (VFS.exists(`${modDb}locales/${localeID}.json`)) {
-				database.locales.global[localeID].templates[`${outfitID}Suite`] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/${localeID}.json`))[outfitID];
+				database.locales.global[localeID][`${newSuite._id} Name`] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/${localeID}.json`))[outfitID].Name;
 			}
 		}
 		
@@ -107,11 +107,11 @@ export class JustNUCore {
 		for (const localeID in database.locales.global)
 		{
 			// en placeholder
-			database.locales.global[localeID].templates[`${outfitID}Suite`] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/en.json`))[outfitID];
+			database.locales.global[localeID][`${newSuite._id} Name`] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/en.json`))[outfitID].Name
 			
 			// actual locale
 			if (VFS.exists(`${modDb}locales/${localeID}.json`)) {
-				database.locales.global[localeID].templates[`${outfitID}Suite`] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/${localeID}.json`))[outfitID];
+				database.locales.global[localeID][`${newSuite._id} Name`] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/${localeID}.json`))[outfitID].Name;
 			}
 		}
 		
@@ -144,6 +144,7 @@ export class JustNUCore {
 		const jsonUtil = this.jsonUtil;
 		const VFS = this.VFS;
 		const dbItems = database.templates.items;
+		const enLocale = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/en.json`));
 		
 		// copy item from DB, change it's values and add it to database
 		const newItem = jsonUtil.clone(dbItems[baseItemID]);
@@ -165,11 +166,19 @@ export class JustNUCore {
 		for (const localeID in database.locales.global)
 		{
 			// en placeholder
-			database.locales.global[localeID].templates[itemId] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/en.json`))[itemId];
+			database.locales.global[localeID][`${itemId} Name`] = enLocale[itemId].Name;
+			database.locales.global[localeID][`${itemId} ShortName`] = enLocale[itemId].ShortName;
+			database.locales.global[localeID][`${itemId} Description`] = enLocale[itemId].Description;
 			
 			// actual locale
 			if (VFS.exists(`${modDb}locales/${localeID}.json`)) {
-				database.locales.global[localeID].templates[itemId] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/${localeID}.json`))[itemId];
+				const actualLocale = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/${localeID}.json`));
+
+				if (actualLocale[itemId]) {
+					database.locales.global[localeID][`${itemId} Name`] = actualLocale[itemId].Name;
+					database.locales.global[localeID][`${itemId} ShortName`] = actualLocale[itemId].ShortName;
+					database.locales.global[localeID][`${itemId} Description`] = actualLocale[itemId].Description;
+				}
 			}
 		}
 		
