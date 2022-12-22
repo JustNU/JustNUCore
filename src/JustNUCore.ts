@@ -137,7 +137,7 @@ export class JustNUCore {
 		});
 	}
 
-	public addItemRetexture(modDb, itemId, baseItemID, bundlePath, copyAssort, addToBots): void
+	public addItemRetexture(modDb, itemId, baseItemID, bundlePath, copyAssort, addToBots, weightingMult): void
 	{
 		// const
 		const database = this.databaseServer.getTables();
@@ -192,7 +192,7 @@ export class JustNUCore {
 		
 		// bot changes
 		if (addToBots) {
-			this.copyBotItemWeighting(itemId, baseItemID);
+			this.copyBotItemWeighting(itemId, baseItemID, weightingMult);
 		}
 	}
 	
@@ -258,7 +258,7 @@ export class JustNUCore {
 		}
 	}
 	
-	public copyBotItemWeighting(itemId, copyItemID): void
+	public copyBotItemWeighting(itemId, copyItemID, weightingMult): void
 	{
 		// const
 		const database = this.databaseServer.getTables();
@@ -269,7 +269,7 @@ export class JustNUCore {
 			// add to equipment slots
 			for (const slot in database.bots.types[bot].inventory.equipment) {
 				if (database.bots.types[bot].inventory.equipment[slot][copyItemID]) {
-					database.bots.types[bot].inventory.equipment[slot][itemId] = jsonUtil.clone(database.bots.types[bot].inventory.equipment[slot][copyItemID]);
+					database.bots.types[bot].inventory.equipment[slot][itemId] = Math.round(database.bots.types[bot].inventory.equipment[slot][copyItemID] * weightingMult);
 				}
 			}
 			
