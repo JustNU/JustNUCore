@@ -296,15 +296,17 @@ export class JustNUCore {
 			}
 		}
 	}
-	/*
 	
-	static createTraderOffer(ItemID, TraderID, MoneyID, TraderPrice, TraderLvl)
+	public createTraderOffer(itemId, traderID, moneyID, traderPrice, traderLvl): void
 	{
+		// const
+		const database = this.databaseServer.getTables();
+		
 		// add item to the trader
-		database.traders[TraderID].assort.items.push(
+		database.traders[traderID].assort.items.push(
 		{
-			"_id": `${ItemID}_${TraderID}_${MoneyID}_${TraderPrice}_${TraderLvl}_offer`,
-			"_tpl": ItemID,
+			"_id": `${itemId}_${traderID}_${moneyID}_${traderPrice}_${traderLvl}_offer`,
+			"_tpl": itemId,
 			"parentId": "hideout",
 			"slotId": "hideout",
 			"upd":
@@ -315,17 +317,19 @@ export class JustNUCore {
 		});
 
 		// add purchase cost
-		database.traders[TraderID].assort.barter_scheme[`${ItemID}_${TraderID}_${MoneyID}_${TraderPrice}_${TraderLvl}_offer`] = [
+		database.traders[traderID].assort.barter_scheme[`${itemId}_${traderID}_${moneyID}_${traderPrice}_${traderLvl}_offer`] = [
 			[
-			{
-				"count": TraderPrice,
-				"_tpl": MoneyID
-			}]
-		]
+				{
+					"count": traderPrice,
+					"_tpl": moneyID
+				}
+			]
+		];
 
 		// add trader loyalty requirement
-		database.traders[TraderID].assort.loyal_level_items[`${ItemID}_${TraderID}_${MoneyID}_${TraderPrice}_${TraderLvl}_offer`] = TraderLvl;
+		database.traders[traderID].assort.loyal_level_items[`${itemId}_${traderID}_${moneyID}_${traderPrice}_${traderLvl}_offer`] = traderLvl;
 	}
+	/*
 	
 	static createBotSpawnPoint(spawnPointName, xCoordinate, yCoordinate, zCoordinate, map, botZoneName, RequiresCordFix = true) 
 	{
