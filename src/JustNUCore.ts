@@ -237,21 +237,25 @@ export class JustNUCore {
 		
 		for (const trader in database.traders) {
 			if (trader !== "ragfair") {
-				for (const offer in database.traders[trader].assort.items) {
-					if (database.traders[trader].assort.items[offer]._tpl === copyItemID && database.traders[trader].assort.items[offer].parentId === "hideout" ) {
-						// copy original offer, change its id and tpl, and push to assorts
-						const newOffer = jsonUtil.clone(database.traders[trader].assort.items[offer]);
-						newOffer._id = `${database.traders[trader].assort.items[offer]._id}_${itemId}_${trader}`;
-						newOffer._tpl = itemId;
-						database.traders[trader].assort.items.push(newOffer)
-						
-						// copy price
-						const newPrice = jsonUtil.clone(database.traders[trader].assort.barter_scheme[database.traders[trader].assort.items[offer]._id]);
-						database.traders[trader].assort.barter_scheme[`${database.traders[trader].assort.items[offer]._id}_${itemId}_${trader}`] = newPrice;
-						
-						// copy loyalty level
-						const newLoaylty = jsonUtil.clone(database.traders[trader].assort.loyal_level_items[database.traders[trader].assort.items[offer]._id]);
-						database.traders[trader].assort.loyal_level_items[`${database.traders[trader].assort.items[offer]._id}_${itemId}_${trader}`] = newLoaylty;
+				if (database.traders[trader].assort) {
+					if (database.traders[trader].assort.items) {
+						for (const offer in database.traders[trader].assort.items) {
+							if (database.traders[trader].assort.items[offer]._tpl === copyItemID && database.traders[trader].assort.items[offer].parentId === "hideout" ) {
+								// copy original offer, change its id and tpl, and push to assorts
+								const newOffer = jsonUtil.clone(database.traders[trader].assort.items[offer]);
+								newOffer._id = `${database.traders[trader].assort.items[offer]._id}_${itemId}_${trader}`;
+								newOffer._tpl = itemId;
+								database.traders[trader].assort.items.push(newOffer)
+								
+								// copy price
+								const newPrice = jsonUtil.clone(database.traders[trader].assort.barter_scheme[database.traders[trader].assort.items[offer]._id]);
+								database.traders[trader].assort.barter_scheme[`${database.traders[trader].assort.items[offer]._id}_${itemId}_${trader}`] = newPrice;
+								
+								// copy loyalty level
+								const newLoaylty = jsonUtil.clone(database.traders[trader].assort.loyal_level_items[database.traders[trader].assort.items[offer]._id]);
+								database.traders[trader].assort.loyal_level_items[`${database.traders[trader].assort.items[offer]._id}_${itemId}_${trader}`] = newLoaylty;
+							}
+						}
 					}
 				}
 			}
