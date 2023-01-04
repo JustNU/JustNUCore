@@ -159,8 +159,10 @@ export class JustNUCore {
 		database.templates.handbook.Items.push(newItemHandbook);
 		
 		// add it to prices json for flea pricing
-		const newPrice = jsonUtil.clone(database.templates.prices[baseItemID];
-		database.templates.prices[itemId] = newPrice;
+		if (database.templates.prices[baseItemID]) {
+			const newPrice = jsonUtil.clone(database.templates.prices[baseItemID];
+			database.templates.prices[itemId] = newPrice;
+		}
 		
 		// locale
 		for (const localeID in database.locales.global)
