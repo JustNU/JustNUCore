@@ -137,14 +137,15 @@ export class JustNUCore {
 		});
 	}
 
-	public addItemRetexture(modDb, itemId, baseItemID, bundlePath, copyAssort, addToBots, weightingMult): void
+	public addItemRetexture(itemId, baseItemID, bundlePath, copyAssort, addToBots, weightingMult): void
 	{
 		// const
 		const database = this.databaseServer.getTables();
 		const jsonUtil = this.jsonUtil;
 		const dbItems = database.templates.items;
 		
-		// copy item from DB, change it's values and add it to database
+		
+		// copy item from DB, change it's data and add it to database
 		const newItem = jsonUtil.clone(dbItems[baseItemID]);
 		newItem._id = itemId;
 		newItem._name = itemId;
