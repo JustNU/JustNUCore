@@ -2,7 +2,7 @@
     "name": "JustNUCore",
     "author": "JustNU",
     "version": "1.0.3",
-    "license": "MIT",
+    "license": "Unlicense",
     "main": "src/mod.js",
 	"akiVersion": "3.4.*"
 }
