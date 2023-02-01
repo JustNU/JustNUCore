@@ -221,7 +221,15 @@ export class JustNUCore {
 				if (database.traders[trader].assort) {
 					if (database.traders[trader].assort.items) {
 						for (const offer in database.traders[trader].assort.items) {
-							if (database.traders[trader].assort.items[offer]._tpl === copyItemID && database.traders[trader].assort.items[offer].parentId === "hideout" && !database.traders[trader].questassort.success[offer]) {
+							if (database.traders[trader].assort.items[offer]._tpl === copyItemID && database.traders[trader].assort.items[offer].parentId === "hideout") {
+								// skip the offer if its a quest unlock
+								if (database.traders[trader].questassort) {
+									if (database.traders[trader].questassort.success[offer]) {
+										continue;
+									}
+								}
+								
+								
 								// copy original offer, change its id and tpl, and push to assorts
 								const newOffer = jsonUtil.clone(database.traders[trader].assort.items[offer]);
 								newOffer._id = `${database.traders[trader].assort.items[offer]._id}_${itemId}_${trader}`;
