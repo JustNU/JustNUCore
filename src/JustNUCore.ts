@@ -12,7 +12,7 @@ export class JustNUCore {
 	)
 	{}
 	
-	public addTop(modDb, outfitID, topbundlePath, handsbundlePath, handsBaseID): void
+	public addTop(outfitId, topBundlePath, handsBundlePath, handsBaseID, traderId, loyaltyLevel, profileLevel, standing, currencyId, price): void
 	{
 		// const
 		const database = this.databaseServer.getTables();
@@ -22,64 +22,60 @@ export class JustNUCore {
 		// add top
 		const newTop = jsonUtil.clone(database.templates.customization["5d28adcb86f77429242fc893"]);
 
-		newTop._id = outfitID;
-		newTop._name = outfitID;
-		newTop._props.Prefab.path = topbundlePath;
-		database.templates.customization[outfitID] = newTop;
+		newTop._id = outfitId;
+		newTop._name = outfitId;
+		newTop._props.Prefab.path = topBundlePath;
+		database.templates.customization[outfitId] = newTop;
 		
 		// add hands
 		const newHands = jsonUtil.clone(database.templates.customization[handsBaseID]);
 
-		newHands._id = `${outfitID}Hands`;
-		newHands._name = `${outfitID}Hands`;
-		newHands._props.Prefab.path = handsbundlePath;
-		database.templates.customization[`${outfitID}Hands`] = newHands;
+		newHands._id = `${outfitId}Hands`;
+		newHands._name = `${outfitId}Hands`;
+		newHands._props.Prefab.path = handsBundlePath;
+		database.templates.customization[`${outfitId}Hands`] = newHands;
 		
 		// add suite
 		const newSuite = jsonUtil.clone(database.templates.customization["5d1f623e86f7744bce0ef705"]);
 
-		newSuite._id = `${outfitID}Suite`;
-		newSuite._name = `${outfitID}Suite`;
-		newSuite._props.Body = outfitID;
-		newSuite._props.Hands = `${outfitID}Hands`;
+		newSuite._id = `${outfitId}Suite`;
+		newSuite._name = `${outfitId}Suite`;
+		newSuite._props.Body = outfitId;
+		newSuite._props.Hands = `${outfitId}Hands`;
 		newSuite._props.Side = ["Usec", "Bear", "Savage"];
-		database.templates.customization[`${outfitID}Suite`] = newSuite;
+		database.templates.customization[`${outfitId}Suite`] = newSuite;
 		
-		// locale
-		for (const localeID in database.locales.global)
-		{
-			// en placeholder
-			database.locales.global[localeID][`${newSuite._id} Name`] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/en.json`))[outfitID].Name
-			
-			// actual locale
-			if (VFS.exists(`${modDb}locales/${localeID}.json`)) {
-				database.locales.global[localeID][`${newSuite._id} Name`] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/${localeID}.json`))[outfitID].Name;
-			}
+		// set customization seller to true
+		database.traders[traderId].base.customization_seller = true;
+		
+		// check if suits array exists, create it if its not
+		if (!database.traders[traderId].suits) {
+			database.traders[traderId].suits = [];
 		}
 		
-		// add suite to the ragman
-		database.traders["5ac3b934156ae10c4430e83c"].suits.push({
-			"_id": outfitID,
-			"tid": "5ac3b934156ae10c4430e83c",
-			"suiteId": `${outfitID}Suite`,
+		// add suite to the trader
+		database.traders[traderId].suits.push({
+			"_id": outfitId,
+			"tid": traderId,
+			"suiteId": `${outfitId}Suite`,
 			"isActive": true,
 			"requirements": {
-				"loyaltyLevel": 0,
-				"profileLevel": 0,
-				"standing": 0,
+				"loyaltyLevel": loyaltyLevel,
+				"profileLevel": profileLevel,
+				"standing": standing,
 				"skillRequirements": [],
 				"questRequirements": [],
 				"itemRequirements": [
 					{
-						"count": 0,
-						"_tpl": "5449016a4bdc2d6f028b456f"
+						"count": price,
+						"_tpl": currencyId
 					}
 				]
 			}
 		});
 	}
 	
-	public addBottom(modDb, outfitID, bundlePath): void
+	public addBottom(outfitId, bundlePath, traderId, loyaltyLevel, profileLevel, standing, currencyId, price): void
 	{
 		// const
 		const database = this.databaseServer.getTables();
@@ -89,48 +85,44 @@ export class JustNUCore {
 		// add Bottom
 		const newBottom = jsonUtil.clone(database.templates.customization["5d5e7f4986f7746956659f8a"]);
 
-		newBottom._id = outfitID;
-		newBottom._name = outfitID;
+		newBottom._id = outfitId;
+		newBottom._name = outfitId;
 		newBottom._props.Prefab.path = bundlePath;
-		database.templates.customization[outfitID] = newBottom;
+		database.templates.customization[outfitId] = newBottom;
 		
 		// add suite
 		const newSuite = jsonUtil.clone(database.templates.customization["5cd946231388ce000d572fe3"]);
 
-		newSuite._id = `${outfitID}Suite`;
-		newSuite._name = `${outfitID}Suite`;
-		newSuite._props.Feet = outfitID;
+		newSuite._id = `${outfitId}Suite`;
+		newSuite._name = `${outfitId}Suite`;
+		newSuite._props.Feet = outfitId;
 		newSuite._props.Side = ["Usec", "Bear", "Savage"];
-		database.templates.customization[`${outfitID}Suite`] = newSuite;
+		database.templates.customization[`${outfitId}Suite`] = newSuite;
 		
-		// locale
-		for (const localeID in database.locales.global)
-		{
-			// en placeholder
-			database.locales.global[localeID][`${newSuite._id} Name`] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/en.json`))[outfitID].Name
-			
-			// actual locale
-			if (VFS.exists(`${modDb}locales/${localeID}.json`)) {
-				database.locales.global[localeID][`${newSuite._id} Name`] = jsonUtil.deserialize(VFS.readFile(`${modDb}locales/${localeID}.json`))[outfitID].Name;
-			}
+		// set customization seller to true
+		database.traders[traderId].base.customization_seller = true;
+		
+		// check if suits array exists, create it if its not
+		if (!database.traders[traderId].suits) {
+			database.traders[traderId].suits = [];
 		}
 		
-		// add suite to the ragman
-		database.traders["5ac3b934156ae10c4430e83c"].suits.push({
-			"_id": outfitID,
-			"tid": "5ac3b934156ae10c4430e83c",
-			"suiteId": `${outfitID}Suite`,
+		// add suite to the trader
+		database.traders[traderId].suits.push({
+			"_id": outfitId,
+			"tid": traderId,
+			"suiteId": `${outfitId}Suite`,
 			"isActive": true,
 			"requirements": {
-				"loyaltyLevel": 0,
-				"profileLevel": 0,
-				"standing": 0,
+				"loyaltyLevel": loyaltyLevel,
+				"profileLevel": profileLevel,
+				"standing": standing,
 				"skillRequirements": [],
 				"questRequirements": [],
 				"itemRequirements": [
 					{
-						"count": 0,
-						"_tpl": "5449016a4bdc2d6f028b456f"
+						"count": price,
+						"_tpl": currencyId
 					}
 				]
 			}
