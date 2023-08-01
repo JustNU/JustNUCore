@@ -151,7 +151,7 @@ export class JustNUCore {
 		
 		// add it to prices json for flea pricing
 		if (database.templates.prices[baseItemID]) {
-			const newPrice = jsonUtil.clone(database.templates.prices[baseItemID];
+			const newPrice = jsonUtil.clone(database.templates.prices[baseItemID]);
 			database.templates.prices[itemId] = newPrice;
 		}
 		
