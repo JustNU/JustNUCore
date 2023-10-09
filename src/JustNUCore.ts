@@ -253,14 +253,14 @@ export class JustNUCore {
 			
 			// add to equipment slots
 			for (const slot in database.bots.types[bot].inventory.equipment) {
-				if (database.bots.types[bot].inventory.equipment[slot][copyItemID]) {
+				if (database.bots.types[bot]?.inventory?.equipment[slot][copyItemID]) {
 					database.bots.types[bot].inventory.equipment[slot][itemId] = Math.round(database.bots.types[bot].inventory.equipment[slot][copyItemID] * weightingMult);
 				}
 			}
 			
 			// add to loot
 			for (const lootSlot in database.bots.types[bot].inventory.items) {
-				if (database.bots.types[bot].inventory.items[lootSlot].includes(copyItemID)) {
+				if (database.bots.types[bot]?.inventory?.items[lootSlot]?.includes(copyItemID)) {
 					database.bots.types[bot].inventory.items[lootSlot].push(itemId);
 				}
 			}
@@ -269,13 +269,13 @@ export class JustNUCore {
 			for (const modItem in database.bots.types[bot].inventory.mods) {
 				// push to inv.mods.slot if its an attachment
 				for (const modSlot in database.bots.types[bot].inventory.mods[modItem]) {
-					if (database.bots.types[bot].inventory.mods[modItem][modSlot].includes(copyItemID)) {
+					if (database.bots.types[bot].inventory?.mods[modItem][modSlot].includes(copyItemID)) {
 						database.bots.types[bot].inventory.mods[modItem][modSlot].push(itemId);
 					}
 				}
 				
 				// add to inv.mods if it can have mods
-				if (database.bots.types[bot].inventory.mods[copyItemID]) {
+				if (database.bots.types[bot].inventory?.mods[copyItemID]) {
 					database.bots.types[bot].inventory.mods[itemId] = jsonUtil.clone(database.bots.types[bot].inventory.mods[copyItemID]);
 				}
 			}
