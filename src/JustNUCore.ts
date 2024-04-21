@@ -129,7 +129,7 @@ export class JustNUCore {
 		});
 	}
 
-	public addItemRetexture(itemId, baseItemID, bundlePath, copyAssort, addToBots, weightingMult): void
+	public addItemRetexture(itemId, baseItemID, bundlePath, copyAssort, addToBots, weightingMult, copyBaseItemPreset = true): void
 	{
 		// const
 		const database = this.databaseServer.getTables();
@@ -142,6 +142,13 @@ export class JustNUCore {
 		newItem._id = itemId;
 		newItem._name = itemId;
 		newItem._props.Prefab.path = bundlePath;
+		
+		// update slots
+		for (const slotIndex in newItem._props.Slots)
+		{
+			newItem._props.Slots[slotIndex]._parent = itemId;
+		}
+		
 		dbItems[itemId] = newItem;
 		
 		// copy handbook entry, change its Id, add it to handbook
@@ -166,6 +173,11 @@ export class JustNUCore {
 		// bot changes
 		if (addToBots) {
 			this.copyBotItemWeighting(itemId, baseItemID, weightingMult);
+		}
+		
+		// item presets
+		if (copyBaseItemPreset) {
+			this.copyItemPreset(itemId, baseItemID);
 		}
 	}
 	
@@ -263,8 +275,10 @@ export class JustNUCore {
 			}
 			// add to loot
 			for (const lootSlot in database.bots.types[bot].inventory.items) {
-				if (database.bots.types[bot]?.inventory?.items[lootSlot]?.includes(copyItemID)) {
-					database.bots.types[bot].inventory.items[lootSlot].push(itemId);
+				if (database.bots.types[bot].inventory?.items[lootSlot][copyItemID]) {
+					database.bots.types[bot].inventory.items[lootSlot][itemId] = Math.ceil(database.bots.types[bot].inventory.items[lootSlot][copyItemID] * weightingMult);
+					
+					//this.logger.info(`added ${itemId} with weight of ${database.bots.types[bot].inventory.items[lootSlot][itemId]}`);
 				}
 			}
 			
@@ -316,5 +330,27 @@ export class JustNUCore {
 
 		// add trader loyalty requirement
 		database.traders[traderID].assort.loyal_level_items[`${itemId}_${traderID}_${moneyID}_${traderPrice}_${traderLvl}_offer`] = traderLvl;
+	}
+	
+	public copyItemPreset(itemId, copyItemID): void
+	{
+		// const
+		const database = this.databaseServer.getTables();
+		const jsonUtil = this.jsonUtil;
+		
+		for (const item in database.globals.ItemPresets)
+		{
+			if (database.globals.ItemPresets[item]._encyclopedia === copyItemID)
+			{
+				const newItemPreset = jsonUtil.clone(database.globals.ItemPresets[item]);
+				newItemPreset._encyclopedia = itemId;
+				newItemPreset._id = `${itemId}_GlobalsItemPreset`;
+				newItemPreset._items[0]._tpl = itemId;
+				database.globals.ItemPresets[`${itemId}_GlobalsItemPreset`] = newItemPreset;
+				
+				return;
+			}
+		}
+		
 	}
 }
